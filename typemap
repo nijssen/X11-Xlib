@@ -14,6 +14,7 @@ XSetWindowAttributes* O_X11_Xlib_Struct
 XSizeHints *          O_X11_Xlib_Struct
 XRectangle *          O_X11_Xlib_Struct
 XRenderPictFormat *   O_X11_Xlib_Struct
+XGCValues *           O_X11_Xlib_Struct
 Window                O_X11_Xlib_XID
 Pixmap                O_X11_Xlib_XID
 Cursor                O_X11_Xlib_XID
@@ -25,11 +26,13 @@ Glyph                 O_X11_Xlib_XID
 GlyphSet              O_X11_Xlib_XID
 Picture               O_X11_Xlib_XID
 PictFormat            O_X11_Xlib_XID
+Font                  O_X11_Xlib_XID
 Atom                  T_UV
 Time                  T_UV
 Bool                  T_BOOL
 KeyCode               T_IV
 KeySym                T_IV
+
 
 INPUT
 O_X11_Xlib

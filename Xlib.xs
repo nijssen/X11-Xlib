@@ -1619,6 +1619,14 @@ _install_error_handlers(nonfatal,fatal)
     CODE:
         PerlXlib_install_error_handlers(nonfatal, fatal);
 
+# Cursor stuff --------------------------------------------------------------
+
+Cursor
+XCreateFontCursor(dpy,shape)
+    Display *dpy
+    unsigned int shape
+
+
 # Xcomposite Extension () ----------------------------------------------------
 
 #ifdef XCOMPOSITE_VERSION
@@ -4591,6 +4599,368 @@ type(self, value=NULL)
 
 # END GENERATED X11_Xlib_XRenderPictFormat
 # ----------------------------------------------------------------------------
+# BEGIN GENERATED X11_Xlib_XGCValues
+
+MODULE = X11::Xlib                PACKAGE = X11::Xlib::XGCValues
+
+int
+_sizeof(ignored=NULL)
+    SV* ignored;
+    CODE:
+        RETVAL = sizeof(XGCValues);
+    OUTPUT:
+        RETVAL
+
+void
+_initialize(s)
+    SV *s
+    INIT:
+        void *sptr;
+    PPCODE:
+        sptr= PerlXlib_get_struct_ptr(s, 1, "X11::Xlib::XGCValues", sizeof(XGCValues),
+            (PerlXlib_struct_pack_fn*) &PerlXlib_XGCValues_pack
+        );
+        memset((void*) sptr, 0, sizeof(XGCValues));
+
+void
+_pack(s, fields, consume=0)
+    XGCValues *s
+    HV *fields
+    Bool consume
+    PPCODE:
+        PerlXlib_XGCValues_pack(s, fields, consume);
+
+void
+_unpack(s, fields)
+    XGCValues *s
+    HV *fields
+    PPCODE:
+        PerlXlib_XGCValues_unpack(s, fields);
+
+void
+arc_mode(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->arc_mode= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->arc_mode)));
+    }
+
+void
+background(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->background= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->background)));
+    }
+
+void
+cap_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->cap_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->cap_style)));
+    }
+
+void
+clip_mask(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_mask= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->clip_mask)));
+    }
+
+void
+clip_x_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_x_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->clip_x_origin)));
+    }
+
+void
+clip_y_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_y_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->clip_y_origin)));
+    }
+
+void
+dash_offset(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->dash_offset= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->dash_offset)));
+    }
+
+void
+dashes(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->dashes= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->dashes)));
+    }
+
+void
+fill_rule(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->fill_rule= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->fill_rule)));
+    }
+
+void
+fill_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->fill_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->fill_style)));
+    }
+
+void
+font(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->font= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->font)));
+    }
+
+void
+foreground(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->foreground= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->foreground)));
+    }
+
+void
+function(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->function= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->function)));
+    }
+
+void
+graphics_exposures(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->graphics_exposures= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->graphics_exposures)));
+    }
+
+void
+join_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->join_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->join_style)));
+    }
+
+void
+line_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->line_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->line_style)));
+    }
+
+void
+line_width(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->line_width= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->line_width)));
+    }
+
+void
+plane_mask(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->plane_mask= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->plane_mask)));
+    }
+
+void
+stipple(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->stipple= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->stipple)));
+    }
+
+void
+subwindow_mode(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->subwindow_mode= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->subwindow_mode)));
+    }
+
+void
+tile(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->tile= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->tile)));
+    }
+
+void
+ts_x_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->ts_x_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->ts_x_origin)));
+    }
+
+void
+ts_y_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->ts_y_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->ts_y_origin)));
+    }
+
+# END GENERATED X11_Xlib_XGCValues
+
 
 BOOT:
 # BEGIN GENERATED BOOT CONSTANTS

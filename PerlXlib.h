@@ -76,6 +76,10 @@ typedef struct {
 extern void PerlXlib_XRenderPictFormat_pack(XRenderPictFormat *s, HV *fields, Bool consume);
 extern void PerlXlib_XRenderPictFormat_unpack(XRenderPictFormat *s, HV *fields);
 
+/* XGCValue */
+extern void PerlXlib_XGCValues_pack(XGCValues *s, HV *fields, Bool consume);
+extern void PerlXlib_XGCValues_unpack(XGCValues *s, HV *fields);
+
 /* Keysym/unicode utility functions */
 extern int PerlXlib_keysym_to_codepoint(KeySym keysym);
 extern KeySym PerlXlib_codepoint_to_keysym(int codepoint);
