@@ -11,7 +11,7 @@ keysym_to_codepoint.c
 META.yml                                 Module YAML meta-data (added by MakeMaker)
 META.json                                Module JSON meta-data (added by MakeMaker)
 lib/X11/Xlib.pm
-lib/X11/Xlib/.XArc.pm.swp
+lib/X11/Xlib/.Struct.pm.swp
 lib/X11/Xlib/Colormap.pm
 lib/X11/Xlib/Display.pm
 lib/X11/Xlib/Keymap.pm

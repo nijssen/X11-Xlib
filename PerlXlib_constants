@@ -244,3 +244,10 @@ const_gc_components
  i GCCapStyle
  i GCFont
  i GCGraphicsExposures
+const_shape
+ i Complex
+ i Convex
+ i Nonconvex
+const_coordmode
+ i CoordModeOrigin
+ i CoordModePrevious

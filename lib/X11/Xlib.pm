@@ -20,6 +20,7 @@ require X11::Xlib::Opaque;
 my %_constants= (
 # BEGIN GENERATED XS CONSTANT LIST
   const_cmap => [qw( AllocAll AllocNone )],
+  const_coordmode => [qw( CoordModeOrigin CoordModePrevious )],
   const_error => [qw( BadAccess BadAlloc BadAtom BadColor BadCursor BadDrawable
     BadFont BadGC BadIDChoice BadImplementation BadLength BadMatch BadName
     BadPixmap BadRequest BadValue BadWindow Success )],
@@ -49,6 +50,7 @@ my %_constants= (
     Mod5Mask NoSymbol PointerRoot ReplayKeyboard ReplayPointer RevertToNone
     RevertToParent RevertToPointerRoot ShiftMask SyncBoth SyncKeyboard
     SyncPointer XK_VoidSymbol )],
+  const_shape => [qw( Complex Convex Nonconvex )],
   const_sizehint => [qw( PAspect PBaseSize PMaxSize PMinSize PPosition
     PResizeInc PSize PWinGravity USPosition USSize )],
   const_time => [qw( CurrentTime )],
@@ -77,10 +79,6 @@ my %_constants= (
 );
 my %_functions= (
 # BEGIN GENERATED XS FUNCTION LIST
-  GC => [qw( XChangeGC XCopyGC XCreateGC XFlushGC XFreeGC XGetGCValues
-    XQueryBestSize XSetBackground XSetDashes XSetFillRule XSetFillStyle
-    XSetForeground XSetFunction XSetLineAttributes XSetPlaneMask XSetState
-    )],
   fn_atom => [qw( XGetAtomName XGetAtomNames XInternAtom XInternAtoms )],
   fn_conn => [qw( ConnectionNumber XCloseDisplay XDisplayName XOpenDisplay
     XServerVendor XSetCloseDownMode XVendorRelease )],
@@ -88,6 +86,12 @@ my %_functions= (
     XCheckWindowEvent XEventsQueued XFlush XGetErrorDatabaseText XGetErrorText
     XNextEvent XPending XPutBackEvent XQLength XSelectInput XSendEvent XSync
     )],
+  fn_gc => [qw( XChangeGC XCopyArea XCopyGC XCopyPlane XCreateGC XDrawLine
+    XDrawLines XDrawPoint XDrawPoints XDrawRectangle XDrawRectangles
+    XDrawSegments XFillPolygon XFillRectangle XFillRectangles XFlushGC XFreeGC
+    XGetGCValues XQueryBestSize XSetBackground XSetDashes XSetFillRule
+    XSetFillStyle XSetForeground XSetFunction XSetLineAttributes XSetPlaneMask
+    XSetState )],
   fn_input => [qw( XAllowEvents XBell XGrabButton XGrabKey XGrabKeyboard
     XGrabPointer XQueryKeymap XQueryPointer XSetInputFocus XUngrabButton
     XUngrabKey XUngrabKeyboard XUngrabPointer keyboard_leds )],

@@ -1626,7 +1626,7 @@ _install_error_handlers(nonfatal,fatal)
     CODE:
         PerlXlib_install_error_handlers(nonfatal, fatal);
 
-# Graphics Context (GC) ------------------------------------------------------
+# Graphics Context (fn_gc) ---------------------------------------------------
 GC
 XCreateGC(dpy, d, valuemask, values)
     Display * dpy
@@ -1758,7 +1758,219 @@ XQueryBestSize(dpy, class, which_screen, width, height)
             PUSHs(sv_2mortal(newSVuv(height_return)));
         }
 
+void
+XDrawPoint(dpy, d, gc, x, y)
+    Display * dpy
+    Drawable d
+    GC gc
+    int x
+    int y
 
+void 
+XDrawPoints(dpy, d, gc, points_av, mode)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * points_av
+    int mode
+    INIT:
+        int n, i;
+        XPoint *points, *p;
+        SV **elem;
+    PPCODE:
+        n = av_len(points_av) + 1;
+        Newx(points, n, XPoint);
+        SAVEFREEPV(points);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(points_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            // TODO(maybe): accept an array of 2-tuple arrays to serve as points
+            p = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XPoint", sizeof(XPoint),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XPoint_pack);
+            memcpy(&points[i], p, sizeof(XPoint));
+        }
+        XDrawPoints(dpy, d, gc, points, n, mode);
+
+void
+XDrawLine(dpy, d, gc, x1, y1, x2, y2)
+    Display * dpy
+    Drawable d
+    GC gc
+    int x1
+    int y1
+    int x2
+    int y2
+
+void
+XDrawLines(dpy, d, gc, points_av, mode)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * points_av
+    int mode
+    INIT:
+        int n, i;
+        XPoint *points, *p;
+        SV **elem;
+    PPCODE:
+        n = av_len(points_av) + 1;
+        Newx(points, n, XPoint);
+        SAVEFREEPV(points);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(points_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            // TODO(maybe): accept an array of 2-tuple arrays to serve as points
+            p = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XPoint", sizeof(XPoint),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XPoint_pack);
+            memcpy(&points[i], p, sizeof(XPoint));
+        }
+        XDrawLines(dpy, d, gc, points, n, mode);
+
+void
+XDrawSegments(dpy, d, gc, segments_av)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * segments_av
+    INIT:
+        int n, i;
+        XSegment *segments, *s;
+        SV **elem;
+    PPCODE:
+        n = av_len(segments_av) + 1;
+        Newx(segments, n, XSegment);
+        SAVEFREEPV(segments);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(segments_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            s = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XSegment", sizeof(XSegment),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XSegment_pack);
+            memcpy(&segments[i], s, sizeof(XSegment));
+        }
+        XDrawSegments(dpy, d, gc, segments, n);
+
+void
+XDrawRectangle(dpy, d, gc, x, y, width, height)
+    Display * dpy
+    Drawable d
+    GC gc
+    int x
+    int y
+    unsigned int width
+    unsigned int height
+
+void
+XDrawRectangles(dpy, d, gc, rects_av)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * rects_av
+    INIT:
+        int n, i;
+        XRectangle *rects, *r;
+        SV **elem;
+    PPCODE:
+        n = av_len(rects_av) + 1;
+        Newx(rects, n, XRectangle);
+        SAVEFREEPV(rects);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(rects_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            r = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XRectangle", sizeof(XRectangle),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XRectangle_pack);
+            memcpy(&rects[i], r, sizeof(XRectangle));
+        }
+        XDrawRectangles(dpy, d, gc, rects, n);
+
+void
+XFillRectangle(dpy, d, gc, x, y, width, height)
+    Display * dpy
+    Drawable d
+    GC gc
+    int x
+    int y
+    unsigned int width
+    unsigned int height
+
+void
+XFillRectangles(dpy, d, gc, rects_av)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * rects_av
+    INIT:
+        int n, i;
+        XRectangle *rects, *r;
+        SV **elem;
+    PPCODE:
+        n = av_len(rects_av) + 1;
+        Newx(rects, n, XRectangle);
+        SAVEFREEPV(rects);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(rects_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            r = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XRectangle", sizeof(XRectangle),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XRectangle_pack);
+            memcpy(&rects[i], r, sizeof(XRectangle));
+        }
+        XFillRectangles(dpy, d, gc, rects, n);
+
+void
+XFillPolygon(dpy, d, gc, points_av, shape, mode)
+    Display * dpy
+    Drawable d
+    GC gc
+    AV * points_av
+    int shape
+    int mode
+    INIT:
+        int n, i;
+        int tmp;
+        XPoint *points, *p;
+        SV **elem;
+    PPCODE:
+        n = av_len(points_av) + 1;
+        warn("allocated %d points", n);
+        tmp = 1;
+        //while(tmp);
+        Newx(points, n, XPoint);
+        SAVEFREEPV(points);
+        for (i = 0; i < n; i++) {
+            elem = av_fetch(points_av, i, 0);
+            if (!elem) croak("can't load elem %d", i);
+            // TODO(maybe): accept an array of 2-tuple arrays to serve as points
+            p = PerlXlib_get_struct_ptr(*elem, 0, "X11::Xlib::XPoint", sizeof(XPoint),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XPoint_pack);
+            memcpy(&points[i], p, sizeof(XPoint));
+        }
+        XFillPolygon(dpy, d, gc, points, n, shape, mode);
+
+void
+XCopyArea(dpy, src, dest, gc, src_x, src_y, width, height, dest_x, dest_y)
+    Display * dpy
+    Drawable src
+    Drawable dest
+    GC gc
+    int src_x
+    int src_y
+    unsigned int width
+    unsigned int height
+    int dest_x
+    int dest_y
+
+void
+XCopyPlane(dpy, src, dest, gc, src_x, src_y, width, height, dest_x, dest_y, plane)
+    Display * dpy
+    Drawable src
+    Drawable dest
+    GC gc
+    int src_x
+    int src_y
+    unsigned int width
+    unsigned int height
+    int dest_x
+    int dest_y
+    unsigned long plane
 
 # Xcomposite Extension () ----------------------------------------------------
 
@@ -5617,5 +5829,10 @@ BOOT:
   newCONSTSUB(stash, "GCCapStyle", newSViv(GCCapStyle));
   newCONSTSUB(stash, "GCFont", newSViv(GCFont));
   newCONSTSUB(stash, "GCGraphicsExposures", newSViv(GCGraphicsExposures));
+  newCONSTSUB(stash, "Complex", newSViv(Complex));
+  newCONSTSUB(stash, "Convex", newSViv(Convex));
+  newCONSTSUB(stash, "Nonconvex", newSViv(Nonconvex));
+  newCONSTSUB(stash, "CoordModeOrigin", newSViv(CoordModeOrigin));
+  newCONSTSUB(stash, "CoordModePrevious", newSViv(CoordModePrevious));
 # END GENERATED BOOT CONSTANTS
 #

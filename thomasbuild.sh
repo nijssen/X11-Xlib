@@ -14,6 +14,6 @@ rm -f $tmpfile
 
 #exit 0
 
-perl Makefile.PL INC="-I/soe/tnijssen/usr/include" LIBS="-L/soe/tnijssen/usr/lib/x86_64-linux-gnu -lX11 -lXtst -lXext -lXcomposite -lXfixes -lXrender"
+perl Makefile.PL INC="-I/soe/tnijssen/usr/include" LIBS="-L/soe/tnijssen/usr/lib/x86_64-linux-gnu -lX11 -lXtst -lXext -lXcomposite -lXfixes -lXrender" OPTIMIZE="-g"
 make -j8
 
