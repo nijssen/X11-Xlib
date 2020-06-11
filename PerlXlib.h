@@ -82,9 +82,18 @@ extern void PerlXlib_XWindowChanges_unpack_obj(XWindowChanges *s, HV *fields, SV
 extern void PerlXlib_XSizeHints_pack(XSizeHints *s, HV *fields, Bool consume);
 extern void PerlXlib_XSizeHints_unpack(XSizeHints *s, HV *fields);
 extern void PerlXlib_XSizeHints_unpack_obj(XSizeHints *s, HV *fields, SV *obj_ref);
+extern void PerlXlib_XSegment_pack(XSegment *s, HV *fields, Bool consume);
+extern void PerlXlib_XSegment_unpack(XSegment *s, HV *fields);
+extern void PerlXlib_XSegment_unpack_obj(XSegment *s, HV *fields, SV *obj_ref);
+extern void PerlXlib_XPoint_pack(XPoint *s, HV *fields, Bool consume);
+extern void PerlXlib_XPoint_unpack(XPoint *s, HV *fields);
+extern void PerlXlib_XPoint_unpack_obj(XPoint *s, HV *fields, SV *obj_ref);
 extern void PerlXlib_XRectangle_pack(XRectangle *s, HV *fields, Bool consume);
 extern void PerlXlib_XRectangle_unpack(XRectangle *s, HV *fields);
 extern void PerlXlib_XRectangle_unpack_obj(XRectangle *s, HV *fields, SV *obj_ref);
+extern void PerlXlib_XArc_pack(XArc *s, HV *fields, Bool consume);
+extern void PerlXlib_XArc_unpack(XArc *s, HV *fields);
+extern void PerlXlib_XArc_unpack_obj(XArc *s, HV *fields, SV *obj_ref);
 #ifndef HAVE_XRENDER
 /* Copied from X11/extensions/Xrender.h because I decided it was better to define the struct
    than to have the perl interface change depending on whether it found a header file or not.
@@ -113,6 +122,9 @@ typedef struct {
 extern void PerlXlib_XRenderPictFormat_pack(XRenderPictFormat *s, HV *fields, Bool consume);
 extern void PerlXlib_XRenderPictFormat_unpack(XRenderPictFormat *s, HV *fields);
 extern void PerlXlib_XRenderPictFormat_unpack_obj(XRenderPictFormat *s, HV *fields, SV *obj_ref);
+
+extern void PerlXlib_XGCValues_pack(XGCValues *s, HV *fields, Bool consume);
+extern void PerlXlib_XGCValues_unpack_obj(XGCValues *s, HV *fields, SV *obj_ref);
 
 /* Keysym/unicode utility functions */
 extern int PerlXlib_keysym_to_codepoint(KeySym keysym);

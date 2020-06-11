@@ -1816,6 +1816,72 @@ void PerlXlib_XSizeHints_unpack_obj(XSizeHints *s, HV *fields, SV *obj_ref) {
 
 /* END GENERATED X11_Xlib_XSizeHints */
 /*--------------------------------------------------------------------------*/
+/* BEGIN GENERATED X11_Xlib_XSegment */
+
+void PerlXlib_XSegment_pack(XSegment *s, HV *fields, Bool consume) {
+    SV **fp;
+    Display *dpy= NULL; /* not available.  Magic display attribute is handled by caller. */
+
+    fp= hv_fetch(fields, "x1", 2, 0);
+    if (fp && *fp) { s->x1= SvIV(*fp); if (consume) hv_delete(fields, "x1", 2, G_DISCARD); }
+
+    fp= hv_fetch(fields, "x2", 2, 0);
+    if (fp && *fp) { s->x2= SvIV(*fp); if (consume) hv_delete(fields, "x2", 2, G_DISCARD); }
+
+    fp= hv_fetch(fields, "y1", 2, 0);
+    if (fp && *fp) { s->y1= SvIV(*fp); if (consume) hv_delete(fields, "y1", 2, G_DISCARD); }
+
+    fp= hv_fetch(fields, "y2", 2, 0);
+    if (fp && *fp) { s->y2= SvIV(*fp); if (consume) hv_delete(fields, "y2", 2, G_DISCARD); }
+}
+
+void PerlXlib_XSegment_unpack_obj(XSegment *s, HV *fields, SV *obj_ref) {
+    /* hv_store may return NULL if there is an error, or if the hash is tied.
+     * If it does, we need to release the reference to the value we almost inserted,
+     * so track allocated SV in this var.
+     */
+    SV *sv= NULL;
+    if (!hv_store(fields, "x1"        ,  2, (sv=newSViv(s->x1)), 0)) goto store_fail;
+    if (!hv_store(fields, "x2"        ,  2, (sv=newSViv(s->x2)), 0)) goto store_fail;
+    if (!hv_store(fields, "y1"        ,  2, (sv=newSViv(s->y1)), 0)) goto store_fail;
+    if (!hv_store(fields, "y2"        ,  2, (sv=newSViv(s->y2)), 0)) goto store_fail;
+    return;
+    store_fail:
+        if (sv) sv_2mortal(sv);
+        croak("Can't store field in supplied hash (tied maybe?)");
+}
+
+/* END GENERATED X11_Xlib_XSegment */
+/*--------------------------------------------------------------------------*/
+/* BEGIN GENERATED X11_Xlib_XPoint */
+
+void PerlXlib_XPoint_pack(XPoint *s, HV *fields, Bool consume) {
+    SV **fp;
+    Display *dpy= NULL; /* not available.  Magic display attribute is handled by caller. */
+
+    fp= hv_fetch(fields, "x", 1, 0);
+    if (fp && *fp) { s->x= SvIV(*fp); if (consume) hv_delete(fields, "x", 1, G_DISCARD); }
+
+    fp= hv_fetch(fields, "y", 1, 0);
+    if (fp && *fp) { s->y= SvIV(*fp); if (consume) hv_delete(fields, "y", 1, G_DISCARD); }
+}
+
+void PerlXlib_XPoint_unpack_obj(XPoint *s, HV *fields, SV *obj_ref) {
+    /* hv_store may return NULL if there is an error, or if the hash is tied.
+     * If it does, we need to release the reference to the value we almost inserted,
+     * so track allocated SV in this var.
+     */
+    SV *sv= NULL;
+    if (!hv_store(fields, "x"         ,  1, (sv=newSViv(s->x)), 0)) goto store_fail;
+    if (!hv_store(fields, "y"         ,  1, (sv=newSViv(s->y)), 0)) goto store_fail;
+    return;
+    store_fail:
+        if (sv) sv_2mortal(sv);
+        croak("Can't store field in supplied hash (tied maybe?)");
+}
+
+/* END GENERATED X11_Xlib_XPoint */
+/*--------------------------------------------------------------------------*/
 /* BEGIN GENERATED X11_Xlib_XRectangle */
 
 void PerlXlib_XRectangle_pack(XRectangle *s, HV *fields, Bool consume) {
@@ -1852,6 +1918,51 @@ void PerlXlib_XRectangle_unpack_obj(XRectangle *s, HV *fields, SV *obj_ref) {
 }
 
 /* END GENERATED X11_Xlib_XRectangle */
+/*--------------------------------------------------------------------------*/
+/* BEGIN GENERATED X11_Xlib_XArc */
+
+void PerlXlib_XArc_pack(XArc *s, HV *fields, Bool consume) {
+    SV **fp;
+    Display *dpy= NULL; /* not available.  Magic display attribute is handled by caller. */
+
+    fp= hv_fetch(fields, "angle1", 6, 0);
+    if (fp && *fp) { s->angle1= SvIV(*fp); if (consume) hv_delete(fields, "angle1", 6, G_DISCARD); }
+
+    fp= hv_fetch(fields, "angle2", 6, 0);
+    if (fp && *fp) { s->angle2= SvIV(*fp); if (consume) hv_delete(fields, "angle2", 6, G_DISCARD); }
+
+    fp= hv_fetch(fields, "height", 6, 0);
+    if (fp && *fp) { s->height= SvUV(*fp); if (consume) hv_delete(fields, "height", 6, G_DISCARD); }
+
+    fp= hv_fetch(fields, "width", 5, 0);
+    if (fp && *fp) { s->width= SvUV(*fp); if (consume) hv_delete(fields, "width", 5, G_DISCARD); }
+
+    fp= hv_fetch(fields, "x", 1, 0);
+    if (fp && *fp) { s->x= SvIV(*fp); if (consume) hv_delete(fields, "x", 1, G_DISCARD); }
+
+    fp= hv_fetch(fields, "y", 1, 0);
+    if (fp && *fp) { s->y= SvIV(*fp); if (consume) hv_delete(fields, "y", 1, G_DISCARD); }
+}
+
+void PerlXlib_XArc_unpack_obj(XArc *s, HV *fields, SV *obj_ref) {
+    /* hv_store may return NULL if there is an error, or if the hash is tied.
+     * If it does, we need to release the reference to the value we almost inserted,
+     * so track allocated SV in this var.
+     */
+    SV *sv= NULL;
+    if (!hv_store(fields, "angle1"    ,  6, (sv=newSViv(s->angle1)), 0)) goto store_fail;
+    if (!hv_store(fields, "angle2"    ,  6, (sv=newSViv(s->angle2)), 0)) goto store_fail;
+    if (!hv_store(fields, "height"    ,  6, (sv=newSVuv(s->height)), 0)) goto store_fail;
+    if (!hv_store(fields, "width"     ,  5, (sv=newSVuv(s->width)), 0)) goto store_fail;
+    if (!hv_store(fields, "x"         ,  1, (sv=newSViv(s->x)), 0)) goto store_fail;
+    if (!hv_store(fields, "y"         ,  1, (sv=newSViv(s->y)), 0)) goto store_fail;
+    return;
+    store_fail:
+        if (sv) sv_2mortal(sv);
+        croak("Can't store field in supplied hash (tied maybe?)");
+}
+
+/* END GENERATED X11_Xlib_XArc */
 /*--------------------------------------------------------------------------*/
 /* BEGIN GENERATED X11_Xlib_XRenderPictFormat */
 
@@ -1921,6 +2032,119 @@ void PerlXlib_XRenderPictFormat_unpack_obj(XRenderPictFormat *s, HV *fields, SV 
 }
 
 /* END GENERATED X11_Xlib_XRenderPictFormat */
+/*--------------------------------------------------------------------------*/
+/* BEGIN GENERATED X11_Xlib_XGCValues                                       */
+
+void PerlXlib_XGCValues_pack(XGCValues *s, HV *fields, Bool consume) {
+    SV **fp;
+    Display *dpy= NULL; /* not available.  Magic display attribute is handled by caller. */
+
+    fp= hv_fetch(fields, "arc_mode", 8, 0);
+    if (fp && *fp) { s->arc_mode= SvIV(*fp); if (consume) hv_delete(fields, "arc_mode", 8, G_DISCARD); }
+
+    fp= hv_fetch(fields, "background", 10, 0);
+    if (fp && *fp) { s->background= SvUV(*fp); if (consume) hv_delete(fields, "background", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "cap_style", 9, 0);
+    if (fp && *fp) { s->cap_style= SvIV(*fp); if (consume) hv_delete(fields, "cap_style", 9, G_DISCARD); }
+
+    fp= hv_fetch(fields, "clip_mask", 9, 0);
+    if (fp && *fp) { s->clip_mask= PerlXlib_sv_to_xid(*fp); if (consume) hv_delete(fields, "clip_mask", 9, G_DISCARD); }
+
+    fp= hv_fetch(fields, "clip_x_origin", 13, 0);
+    if (fp && *fp) { s->clip_x_origin= SvIV(*fp); if (consume) hv_delete(fields, "clip_x_origin", 13, G_DISCARD); }
+
+    fp= hv_fetch(fields, "clip_y_origin", 13, 0);
+    if (fp && *fp) { s->clip_y_origin= SvIV(*fp); if (consume) hv_delete(fields, "clip_y_origin", 13, G_DISCARD); }
+
+    fp= hv_fetch(fields, "dash_offset", 11, 0);
+    if (fp && *fp) { s->dash_offset= SvIV(*fp); if (consume) hv_delete(fields, "dash_offset", 11, G_DISCARD); }
+
+    fp= hv_fetch(fields, "dashes", 6, 0);
+    if (fp && *fp) { s->dashes= SvIV(*fp); if (consume) hv_delete(fields, "dashes", 6, G_DISCARD); }
+
+    fp= hv_fetch(fields, "fill_rule", 9, 0);
+    if (fp && *fp) { s->fill_rule= SvIV(*fp); if (consume) hv_delete(fields, "fill_rule", 9, G_DISCARD); }
+
+    fp= hv_fetch(fields, "fill_style", 10, 0);
+    if (fp && *fp) { s->fill_style= SvIV(*fp); if (consume) hv_delete(fields, "fill_style", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "font", 4, 0);
+    if (fp && *fp) { s->font= PerlXlib_sv_to_xid(*fp); if (consume) hv_delete(fields, "font", 4, G_DISCARD); }
+
+    fp= hv_fetch(fields, "foreground", 10, 0);
+    if (fp && *fp) { s->foreground= SvUV(*fp); if (consume) hv_delete(fields, "foreground", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "function", 8, 0);
+    if (fp && *fp) { s->function= SvIV(*fp); if (consume) hv_delete(fields, "function", 8, G_DISCARD); }
+
+    fp= hv_fetch(fields, "graphics_exposures", 18, 0);
+    if (fp && *fp) { s->graphics_exposures= SvIV(*fp); if (consume) hv_delete(fields, "graphics_exposures", 18, G_DISCARD); }
+
+    fp= hv_fetch(fields, "join_style", 10, 0);
+    if (fp && *fp) { s->join_style= SvIV(*fp); if (consume) hv_delete(fields, "join_style", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "line_style", 10, 0);
+    if (fp && *fp) { s->line_style= SvIV(*fp); if (consume) hv_delete(fields, "line_style", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "line_width", 10, 0);
+    if (fp && *fp) { s->line_width= SvIV(*fp); if (consume) hv_delete(fields, "line_width", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "plane_mask", 10, 0);
+    if (fp && *fp) { s->plane_mask= SvUV(*fp); if (consume) hv_delete(fields, "plane_mask", 10, G_DISCARD); }
+
+    fp= hv_fetch(fields, "stipple", 7, 0);
+    if (fp && *fp) { s->stipple= PerlXlib_sv_to_xid(*fp); if (consume) hv_delete(fields, "stipple", 7, G_DISCARD); }
+
+    fp= hv_fetch(fields, "subwindow_mode", 14, 0);
+    if (fp && *fp) { s->subwindow_mode= SvIV(*fp); if (consume) hv_delete(fields, "subwindow_mode", 14, G_DISCARD); }
+
+    fp= hv_fetch(fields, "tile", 4, 0);
+    if (fp && *fp) { s->tile= PerlXlib_sv_to_xid(*fp); if (consume) hv_delete(fields, "tile", 4, G_DISCARD); }
+
+    fp= hv_fetch(fields, "ts_x_origin", 11, 0);
+    if (fp && *fp) { s->ts_x_origin= SvIV(*fp); if (consume) hv_delete(fields, "ts_x_origin", 11, G_DISCARD); }
+
+    fp= hv_fetch(fields, "ts_y_origin", 11, 0);
+    if (fp && *fp) { s->ts_y_origin= SvIV(*fp); if (consume) hv_delete(fields, "ts_y_origin", 11, G_DISCARD); }
+}
+
+void PerlXlib_XGCValues_unpack_obj(XGCValues *s, HV *fields, SV *obj_ref) {
+    /* hv_store may return NULL if there is an error, or if the hash is tied.
+     * If it does, we need to release the reference to the value we almost inserted,
+     * so track allocated SV in this var.
+     */
+    SV *sv= NULL;
+    if (!hv_store(fields, "arc_mode"  ,  8, (sv=newSViv(s->arc_mode)), 0)) goto store_fail;
+    if (!hv_store(fields, "background", 10, (sv=newSVuv(s->background)), 0)) goto store_fail;
+    if (!hv_store(fields, "cap_style" ,  9, (sv=newSViv(s->cap_style)), 0)) goto store_fail;
+    if (!hv_store(fields, "clip_mask" ,  9, (sv=newSVuv(s->clip_mask)), 0)) goto store_fail;
+    if (!hv_store(fields, "clip_x_origin", 13, (sv=newSViv(s->clip_x_origin)), 0)) goto store_fail;
+    if (!hv_store(fields, "clip_y_origin", 13, (sv=newSViv(s->clip_y_origin)), 0)) goto store_fail;
+    if (!hv_store(fields, "dash_offset", 11, (sv=newSViv(s->dash_offset)), 0)) goto store_fail;
+    if (!hv_store(fields, "dashes"    ,  6, (sv=newSViv(s->dashes)), 0)) goto store_fail;
+    if (!hv_store(fields, "fill_rule" ,  9, (sv=newSViv(s->fill_rule)), 0)) goto store_fail;
+    if (!hv_store(fields, "fill_style", 10, (sv=newSViv(s->fill_style)), 0)) goto store_fail;
+    if (!hv_store(fields, "font"      ,  4, (sv=newSVuv(s->font)), 0)) goto store_fail;
+    if (!hv_store(fields, "foreground", 10, (sv=newSVuv(s->foreground)), 0)) goto store_fail;
+    if (!hv_store(fields, "function"  ,  8, (sv=newSViv(s->function)), 0)) goto store_fail;
+    if (!hv_store(fields, "graphics_exposures", 18, (sv=newSViv(s->graphics_exposures)), 0)) goto store_fail;
+    if (!hv_store(fields, "join_style", 10, (sv=newSViv(s->join_style)), 0)) goto store_fail;
+    if (!hv_store(fields, "line_style", 10, (sv=newSViv(s->line_style)), 0)) goto store_fail;
+    if (!hv_store(fields, "line_width", 10, (sv=newSViv(s->line_width)), 0)) goto store_fail;
+    if (!hv_store(fields, "plane_mask", 10, (sv=newSVuv(s->plane_mask)), 0)) goto store_fail;
+    if (!hv_store(fields, "stipple"   ,  7, (sv=newSVuv(s->stipple)), 0)) goto store_fail;
+    if (!hv_store(fields, "subwindow_mode", 14, (sv=newSViv(s->subwindow_mode)), 0)) goto store_fail;
+    if (!hv_store(fields, "tile"      ,  4, (sv=newSVuv(s->tile)), 0)) goto store_fail;
+    if (!hv_store(fields, "ts_x_origin", 11, (sv=newSViv(s->ts_x_origin)), 0)) goto store_fail;
+    if (!hv_store(fields, "ts_y_origin", 11, (sv=newSViv(s->ts_y_origin)), 0)) goto store_fail;
+    return;
+    store_fail:
+        if (sv) sv_2mortal(sv);
+        croak("Can't store field in supplied hash (tied maybe?)");
+}
+
+/* END GENERATED X11_Xlib_XGCValues */
 /*--------------------------------------------------------------------------*/
 
 /* provide these exports for back-compat */

@@ -41,6 +41,8 @@ my %_constants= (
     CompositeRedirectManual )],
   const_ext_shape => [qw( ShapeBounding ShapeClip ShapeInput ShapeIntersect
     ShapeInvert ShapeSet ShapeSubtract ShapeUnion )],
+  const_gc_components => [qw( GCBackground GCCapStyle GCFont GCForeground
+    GCFunction GCGraphicsExposures GCLineStyle GCLineWidth GCPlaneMask )],
   const_input => [qw( AnyKey AnyModifier AsyncBoth AsyncKeyboard AsyncPointer
     Button1Mask Button2Mask Button3Mask Button4Mask Button5Mask ControlMask
     GrabModeAsync GrabModeSync LockMask Mod1Mask Mod2Mask Mod3Mask Mod4Mask
@@ -49,6 +51,7 @@ my %_constants= (
     SyncPointer XK_VoidSymbol )],
   const_sizehint => [qw( PAspect PBaseSize PMaxSize PMinSize PPosition
     PResizeInc PSize PWinGravity USPosition USSize )],
+  const_time => [qw( CurrentTime )],
   const_visual => [qw( VisualAllMask VisualBitsPerRGBMask VisualBlueMaskMask
     VisualClassMask VisualColormapSizeMask VisualDepthMask VisualGreenMaskMask
     VisualIDMask VisualRedMaskMask VisualScreenMask )],
@@ -64,10 +67,20 @@ my %_constants= (
     CWOverrideRedirect CWSaveUnder CWSibling CWStackMode CWWidth CWWinGravity
     CWX CWY )],
   const_x => [qw( None )],
+  const_xgcvalues => [qw( ArcChord ArcPieSlice CapButt CapNotLast CapProjecting
+    CapRound ClipByChildren FillOpaqueStippled FillSolid FillStippled
+    FillTiled GXand GXandInverted GXandReverse GXclear GXcopy GXcopyInverted
+    GXequiv GXinvert GXnand GXnoop GXnor GXor GXorInverted GXorReverse GXset
+    GXxor IncludeInferiors JoinBevel JoinMiter JoinRound LineDoubleDash
+    LineOnOffDash LineSolid )],
 # END GENERATED XS CONSTANT LIST
 );
 my %_functions= (
 # BEGIN GENERATED XS FUNCTION LIST
+  GC => [qw( XChangeGC XCopyGC XCreateGC XFlushGC XFreeGC XGetGCValues
+    XQueryBestSize XSetBackground XSetDashes XSetFillRule XSetFillStyle
+    XSetForeground XSetFunction XSetLineAttributes XSetPlaneMask XSetState
+    )],
   fn_atom => [qw( XGetAtomName XGetAtomNames XInternAtom XInternAtoms )],
   fn_conn => [qw( ConnectionNumber XCloseDisplay XDisplayName XOpenDisplay
     XServerVendor XSetCloseDownMode XVendorRelease )],
@@ -94,14 +107,14 @@ my %_functions= (
     XVisualIDFromVisual )],
   fn_win => [qw( XChangeProperty XChangeWindowAttributes XCirculateSubwindows
     XConfigureWindow XCreateSimpleWindow XCreateWindow XDefineCursor
-    XDeleteProperty XDestroyWindow XGetGeometry XGetWMNormalHints
-    XGetWMProtocols XGetWMSizeHints XGetWindowAttributes XGetWindowProperty
-    XListProperties XLowerWindow XMapWindow XMoveResizeWindow XMoveWindow
-    XQueryTree XRaiseWindow XReparentWindow XResizeWindow XRestackWindows
-    XSetWMNormalHints XSetWMProtocols XSetWMSizeHints XSetWindowBackground
-    XSetWindowBackgroundPixmap XSetWindowBorder XSetWindowBorderPixmap
-    XSetWindowBorderWidth XSetWindowColormap XTranslateCoordinates
-    XUndefineCursor XUnmapWindow )],
+    XDeleteProperty XDestroyWindow XGetGeometry XGetSelectionOwner
+    XGetWMNormalHints XGetWMProtocols XGetWMSizeHints XGetWindowAttributes
+    XGetWindowProperty XListProperties XLowerWindow XMapWindow
+    XMoveResizeWindow XMoveWindow XQueryTree XRaiseWindow XReparentWindow
+    XResizeWindow XRestackWindows XSetWMNormalHints XSetWMProtocols
+    XSetWMSizeHints XSetWindowBackground XSetWindowBackgroundPixmap
+    XSetWindowBorder XSetWindowBorderPixmap XSetWindowBorderWidth
+    XSetWindowColormap XTranslateCoordinates XUndefineCursor XUnmapWindow )],
   fn_xtest => [qw( XTestFakeButtonEvent XTestFakeKeyEvent XTestFakeMotionEvent
     )],
 # END GENERATED XS FUNCTION LIST

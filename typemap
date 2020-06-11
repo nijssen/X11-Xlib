@@ -6,13 +6,18 @@ ScreenNumber          O_X11_Xlib_ScreenNumber
 Visual *              O_X11_Xlib_Opaque
 VisualOrNull          O_X11_Xlib_OpaqueOrNull
 GC                    O_X11_Xlib_Opaque
+GCOrNull              O_X11_Xlib_OpaqueOrNull
+XGCValues *           O_X11_Xlib_Struct
 XEvent *              O_X11_Xlib_Struct
 XVisualInfo *         O_X11_Xlib_Struct
 XWindowChanges *      O_X11_Xlib_Struct
 XWindowAttributes *   O_X11_Xlib_Struct
 XSetWindowAttributes* O_X11_Xlib_Struct
 XSizeHints *          O_X11_Xlib_Struct
+XSegment *            O_X11_Xlib_Struct
+XPoint *              O_X11_Xlib_Struct
 XRectangle *          O_X11_Xlib_Struct
+XArc *                O_X11_Xlib_Struct
 XRenderPictFormat *   O_X11_Xlib_Struct
 Window                O_X11_Xlib_XID
 Pixmap                O_X11_Xlib_XID
@@ -25,11 +30,13 @@ Glyph                 O_X11_Xlib_XID
 GlyphSet              O_X11_Xlib_XID
 Picture               O_X11_Xlib_XID
 PictFormat            O_X11_Xlib_XID
+Font                  O_X11_Xlib_XID
 Atom                  T_UV
 Time                  T_UV
 Bool                  T_BOOL
 KeyCode               T_IV
 KeySym                T_IV
+Status                T_IV
 
 INPUT
 O_X11_Xlib
@@ -117,3 +124,4 @@ O_X11_Xlib_OpaqueOrNull
             dpy, $var, \"X11::Xlib::@{[ $type =~ /(\w+?)OrNull/ ]}\", SVt_PVMG, 1));
     else
         sv_setsv($arg, &PL_sv_undef);
+

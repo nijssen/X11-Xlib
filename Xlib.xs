@@ -25,6 +25,8 @@ void PerlXlib_sanity_check_data_structures();
 
 MODULE = X11::Xlib                PACKAGE = X11::Xlib
 
+PROTOTYPES: DISABLE
+
 void
 _sanity_check_data_structures()
     PPCODE:
@@ -96,7 +98,7 @@ _set_pointer_value(obj, dpy_val)
     SV *dpy_val
     PPCODE:
         if (SvOK(dpy_val) && (!SvPOK(dpy_val) || SvCUR(dpy_val) != sizeof(Display*)))
-            croak("Invalid pointer value (should be scalar of %d bytes)", sizeof(Display*));
+            croak("Invalid pointer value (should be scalar of %d bytes)", (int)sizeof(Display*));
         PerlXlib_set_magic_dpy(obj, SvOK(dpy_val)? (Display*)(void*)SvPVX(dpy_val) : NULL);
 
 char *
@@ -778,7 +780,7 @@ XChangeProperty(dpy, wnd, prop_atom, type, format, mode, data, nelements)
             croak("Un-handled 'format' value %d passed to XChangeProperty", format);
         buffer= SvPV(data, svlen);
         if (bytelen > svlen)
-            croak("'nelements' (%d) exceeds length of data (%d)", nelements, svlen);
+            croak("'nelements' (%d) exceeds length of data (%lu)", nelements, (unsigned long)svlen);
         XChangeProperty(dpy, wnd, prop_atom, type, format, mode, buffer, nelements);
 
 void
@@ -1055,6 +1057,11 @@ XTranslateCoordinates(dpy, src_wnd, dest_wnd, src_x, src_y)
             PUSHs(sv_2mortal(newSViv(dest_y)));
             PUSHs(sv_2mortal(newSViv(child)));
         }
+
+Window
+XGetSelectionOwner(dpy, selection)
+    Display * dpy
+    Atom selection
 
 # XTest Functions (fn_xtest) -------------------------------------------------
 
@@ -1390,7 +1397,7 @@ load_keymap(dpy, symbolic=2, minkey=0, maxkey=255)
                     sv= PerlXlib_keysym_to_sv(syms[i*nsym+j], symbolic);
                     if (!sv) {
                         XFree(syms);
-                        croak("Your keymap includes KeySym 0x%x that can't be un-ambiguously represented by a string", syms[i*nsym+j]);
+                        croak("Your keymap includes KeySym 0x%x that can't be un-ambiguously represented by a string", (unsigned int)syms[i*nsym+j]);
                     }
                     av_store(row, j, sv);
                 }
@@ -1618,6 +1625,140 @@ _install_error_handlers(nonfatal,fatal)
     Bool fatal
     CODE:
         PerlXlib_install_error_handlers(nonfatal, fatal);
+
+# Graphics Context (GC) ------------------------------------------------------
+GC
+XCreateGC(dpy, d, valuemask, values)
+    Display * dpy
+    Drawable d
+    unsigned long valuemask
+    XGCValues *values
+
+int
+XCopyGC(dpy, src, valuemask, dest)
+    Display * dpy
+    GC src
+    unsigned long valuemask
+    GC dest
+
+int
+XChangeGC(dpy, gc, valuemask, values)
+    Display * dpy
+    GC gc
+    unsigned long valuemask
+    XGCValues *values
+
+Status
+XGetGCValues(dpy, gc, valuemask, gcvalues_out)
+    Display * dpy
+    GC gc
+    unsigned long valuemask
+    SV * gcvalues_out
+    INIT:
+        XGCValues values, *dest;
+    CODE:
+        RETVAL = XGetGCValues(dpy, gc, valuemask, &values);
+        if (RETVAL) {
+            dest = (XGCValues*) PerlXlib_get_struct_ptr(
+                gcvalues_out, 1,
+                "X11::Xlib::XGCValues", sizeof(XGCValues),
+                (PerlXlib_struct_pack_fn*) PerlXlib_XGCValues_pack
+            );
+            memcpy(dest, &values, sizeof(values));
+        }
+    OUTPUT:
+        RETVAL
+
+void
+XFreeGC(dpy, gc)
+    Display * dpy
+    GC gc
+
+void
+XFlushGC(dpy, gc)
+    Display * dpy
+    GC gc
+
+void
+XSetState(dpy, gc, foreground, background, function, plane_mask)
+    Display * dpy
+    GC gc
+    unsigned long foreground
+    unsigned long background
+    int function
+    unsigned long plane_mask
+
+void
+XSetForeground(dpy, gc, foreground)
+    Display * dpy
+    GC gc
+    unsigned long foreground
+
+void
+XSetBackground(dpy, gc, background)
+    Display * dpy
+    GC gc
+    unsigned long background 
+
+void
+XSetFunction(dpy, gc, function)
+    Display * dpy
+    GC gc
+    int function
+
+void
+XSetPlaneMask(dpy, gc, plane_mask)
+    Display * dpy
+    GC gc
+    unsigned long plane_mask
+
+void
+XSetLineAttributes(dpy, gc, line_width, line_style, cap_style, join_style)
+    Display * dpy
+    GC gc
+    unsigned int line_width
+    int line_style
+    int cap_style
+    int join_style
+
+void
+XSetDashes(dpy, gc, dash_offset, dash_list)
+    Display * dpy
+    GC gc
+    int dash_offset
+    char *dash_list 
+    CODE:
+        XSetDashes(dpy, gc, dash_offset, dash_list, strlen(dash_list));
+
+void
+XSetFillStyle(dpy, gc, fill_style)
+    Display * dpy
+    GC gc
+    int fill_style
+
+void
+XSetFillRule(dpy, gc, fill_rule)
+    Display * dpy
+    GC gc
+    int fill_rule
+
+void
+XQueryBestSize(dpy, class, which_screen, width, height)
+    Display * dpy
+    int class
+    Drawable which_screen
+    unsigned int width
+    unsigned int height
+    INIT:
+        unsigned int width_return, height_return;
+    PPCODE:
+        if (XQueryBestSize(dpy, class, which_screen, width, height, &width_return, &height_return)) {
+            EXTEND(SP, 2);
+            PUSHs(sv_2mortal(newSVuv(width_return)));
+            PUSHs(sv_2mortal(newSVuv(height_return)));
+        }
+
+
 
 # Xcomposite Extension () ----------------------------------------------------
 
@@ -4287,6 +4428,170 @@ y(self, value=NULL)
 
 # END GENERATED X11_Xlib_XSizeHints
 # ----------------------------------------------------------------------------
+# BEGIN GENERATED X11_Xlib_XSegment
+
+MODULE = X11::Xlib                PACKAGE = X11::Xlib::XSegment
+
+int
+_sizeof(ignored=NULL)
+    SV* ignored;
+    CODE:
+        RETVAL = sizeof(XSegment);
+    OUTPUT:
+        RETVAL
+
+void
+_initialize(s)
+    SV *s
+    INIT:
+        void *sptr;
+    PPCODE:
+        sptr= PerlXlib_get_struct_ptr(s, 1, "X11::Xlib::XSegment", sizeof(XSegment),
+            (PerlXlib_struct_pack_fn*) &PerlXlib_XSegment_pack
+        );
+        memset((void*) sptr, 0, sizeof(XSegment));
+
+void
+_pack(s, fields, consume=0)
+    XSegment *s
+    HV *fields
+    Bool consume
+    PPCODE:
+        PerlXlib_XSegment_pack(s, fields, consume);
+
+void
+_unpack(s, fields)
+    XSegment *s
+    HV *fields
+    PPCODE:
+        PerlXlib_XSegment_unpack_obj(s, fields, ST(0));
+
+void
+x1(self, value=NULL)
+    XSegment *self
+    SV *value
+  INIT:
+    XSegment *s= self;
+  PPCODE:
+    if (value) {
+      s->x1= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->x1)));
+    }
+
+void
+x2(self, value=NULL)
+    XSegment *self
+    SV *value
+  INIT:
+    XSegment *s= self;
+  PPCODE:
+    if (value) {
+      s->x2= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->x2)));
+    }
+
+void
+y1(self, value=NULL)
+    XSegment *self
+    SV *value
+  INIT:
+    XSegment *s= self;
+  PPCODE:
+    if (value) {
+      s->y1= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->y1)));
+    }
+
+void
+y2(self, value=NULL)
+    XSegment *self
+    SV *value
+  INIT:
+    XSegment *s= self;
+  PPCODE:
+    if (value) {
+      s->y2= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->y2)));
+    }
+
+# END GENERATED X11_Xlib_XSegment
+# ----------------------------------------------------------------------------
+# BEGIN GENERATED X11_Xlib_XPoint
+
+MODULE = X11::Xlib                PACKAGE = X11::Xlib::XPoint
+
+int
+_sizeof(ignored=NULL)
+    SV* ignored;
+    CODE:
+        RETVAL = sizeof(XPoint);
+    OUTPUT:
+        RETVAL
+
+void
+_initialize(s)
+    SV *s
+    INIT:
+        void *sptr;
+    PPCODE:
+        sptr= PerlXlib_get_struct_ptr(s, 1, "X11::Xlib::XPoint", sizeof(XPoint),
+            (PerlXlib_struct_pack_fn*) &PerlXlib_XPoint_pack
+        );
+        memset((void*) sptr, 0, sizeof(XPoint));
+
+void
+_pack(s, fields, consume=0)
+    XPoint *s
+    HV *fields
+    Bool consume
+    PPCODE:
+        PerlXlib_XPoint_pack(s, fields, consume);
+
+void
+_unpack(s, fields)
+    XPoint *s
+    HV *fields
+    PPCODE:
+        PerlXlib_XPoint_unpack_obj(s, fields, ST(0));
+
+void
+x(self, value=NULL)
+    XPoint *self
+    SV *value
+  INIT:
+    XPoint *s= self;
+  PPCODE:
+    if (value) {
+      s->x= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->x)));
+    }
+
+void
+y(self, value=NULL)
+    XPoint *self
+    SV *value
+  INIT:
+    XPoint *s= self;
+  PPCODE:
+    if (value) {
+      s->y= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->y)));
+    }
+
+# END GENERATED X11_Xlib_XPoint
+# ----------------------------------------------------------------------------
 # BEGIN GENERATED X11_Xlib_XRectangle
 
 MODULE = X11::Xlib                PACKAGE = X11::Xlib::XRectangle
@@ -4382,6 +4687,130 @@ y(self, value=NULL)
     }
 
 # END GENERATED X11_Xlib_XRectangle
+# ----------------------------------------------------------------------------
+# BEGIN GENERATED X11_Xlib_XArc
+
+MODULE = X11::Xlib                PACKAGE = X11::Xlib::XArc
+
+int
+_sizeof(ignored=NULL)
+    SV* ignored;
+    CODE:
+        RETVAL = sizeof(XArc);
+    OUTPUT:
+        RETVAL
+
+void
+_initialize(s)
+    SV *s
+    INIT:
+        void *sptr;
+    PPCODE:
+        sptr= PerlXlib_get_struct_ptr(s, 1, "X11::Xlib::XArc", sizeof(XArc),
+            (PerlXlib_struct_pack_fn*) &PerlXlib_XArc_pack
+        );
+        memset((void*) sptr, 0, sizeof(XArc));
+
+void
+_pack(s, fields, consume=0)
+    XArc *s
+    HV *fields
+    Bool consume
+    PPCODE:
+        PerlXlib_XArc_pack(s, fields, consume);
+
+void
+_unpack(s, fields)
+    XArc *s
+    HV *fields
+    PPCODE:
+        PerlXlib_XArc_unpack_obj(s, fields, ST(0));
+
+void
+angle1(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->angle1= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->angle1)));
+    }
+
+void
+angle2(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->angle2= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->angle2)));
+    }
+
+void
+height(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->height= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->height)));
+    }
+
+void
+width(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->width= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->width)));
+    }
+
+void
+x(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->x= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->x)));
+    }
+
+void
+y(self, value=NULL)
+    XArc *self
+    SV *value
+  INIT:
+    XArc *s= self;
+  PPCODE:
+    if (value) {
+      s->y= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->y)));
+    }
+
+# END GENERATED X11_Xlib_XArc
 # ----------------------------------------------------------------------------
 # BEGIN GENERATED X11_Xlib_XRenderPictFormat
 
@@ -4591,6 +5020,368 @@ type(self, value=NULL)
 
 # END GENERATED X11_Xlib_XRenderPictFormat
 # ----------------------------------------------------------------------------
+# BEGIN GENERATED X11_Xlib_XGCValues
+
+MODULE = X11::Xlib                PACKAGE = X11::Xlib::XGCValues
+
+int
+_sizeof(ignored=NULL)
+    SV* ignored;
+    CODE:
+        RETVAL = sizeof(XGCValues);
+    OUTPUT:
+        RETVAL
+
+void
+_initialize(s)
+    SV *s
+    INIT:
+        void *sptr;
+    PPCODE:
+        sptr= PerlXlib_get_struct_ptr(s, 1, "X11::Xlib::XGCValues", sizeof(XGCValues),
+            (PerlXlib_struct_pack_fn*) &PerlXlib_XGCValues_pack
+        );
+        memset((void*) sptr, 0, sizeof(XGCValues));
+
+void
+_pack(s, fields, consume=0)
+    XGCValues *s
+    HV *fields
+    Bool consume
+    PPCODE:
+        PerlXlib_XGCValues_pack(s, fields, consume);
+
+void
+_unpack(s, fields)
+    XGCValues *s
+    HV *fields
+    PPCODE:
+        PerlXlib_XGCValues_unpack_obj(s, fields, ST(0));
+
+void
+arc_mode(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->arc_mode= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->arc_mode)));
+    }
+
+void
+background(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->background= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->background)));
+    }
+
+void
+cap_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->cap_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->cap_style)));
+    }
+
+void
+clip_mask(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_mask= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->clip_mask)));
+    }
+
+void
+clip_x_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_x_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->clip_x_origin)));
+    }
+
+void
+clip_y_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->clip_y_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->clip_y_origin)));
+    }
+
+void
+dash_offset(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->dash_offset= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->dash_offset)));
+    }
+
+void
+dashes(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->dashes= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->dashes)));
+    }
+
+void
+fill_rule(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->fill_rule= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->fill_rule)));
+    }
+
+void
+fill_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->fill_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->fill_style)));
+    }
+
+void
+font(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->font= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->font)));
+    }
+
+void
+foreground(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->foreground= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->foreground)));
+    }
+
+void
+function(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->function= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->function)));
+    }
+
+void
+graphics_exposures(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->graphics_exposures= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->graphics_exposures)));
+    }
+
+void
+join_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->join_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->join_style)));
+    }
+
+void
+line_style(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->line_style= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->line_style)));
+    }
+
+void
+line_width(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->line_width= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->line_width)));
+    }
+
+void
+plane_mask(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->plane_mask= SvUV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->plane_mask)));
+    }
+
+void
+stipple(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->stipple= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->stipple)));
+    }
+
+void
+subwindow_mode(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->subwindow_mode= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->subwindow_mode)));
+    }
+
+void
+tile(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->tile= PerlXlib_sv_to_xid(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSVuv(s->tile)));
+    }
+
+void
+ts_x_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->ts_x_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->ts_x_origin)));
+    }
+
+void
+ts_y_origin(self, value=NULL)
+    XGCValues *self
+    SV *value
+  INIT:
+    XGCValues *s= self;
+  PPCODE:
+    if (value) {
+      s->ts_y_origin= SvIV(value);
+      PUSHs(value);
+    } else {
+      PUSHs(sv_2mortal(newSViv(s->ts_y_origin)));
+    }
+
+# END GENERATED X11_Xlib_XGCValues
+# ----------------------------------------------------------------------------
 
 BOOT:
 # BEGIN GENERATED BOOT CONSTANTS
@@ -4782,5 +5573,49 @@ BOOT:
   newCONSTSUB(stash, "ShapeBounding", newSViv(ShapeBounding));
   newCONSTSUB(stash, "ShapeClip", newSViv(ShapeClip));
   newCONSTSUB(stash, "ShapeInput", newSViv(ShapeInput));
+  newCONSTSUB(stash, "CurrentTime", newSViv(CurrentTime));
+  newCONSTSUB(stash, "GXclear", newSViv(GXclear));
+  newCONSTSUB(stash, "GXand", newSViv(GXand));
+  newCONSTSUB(stash, "GXandReverse", newSViv(GXandReverse));
+  newCONSTSUB(stash, "GXcopy", newSViv(GXcopy));
+  newCONSTSUB(stash, "GXandInverted", newSViv(GXandInverted));
+  newCONSTSUB(stash, "GXnoop", newSViv(GXnoop));
+  newCONSTSUB(stash, "GXxor", newSViv(GXxor));
+  newCONSTSUB(stash, "GXor", newSViv(GXor));
+  newCONSTSUB(stash, "GXnor", newSViv(GXnor));
+  newCONSTSUB(stash, "GXequiv", newSViv(GXequiv));
+  newCONSTSUB(stash, "GXinvert", newSViv(GXinvert));
+  newCONSTSUB(stash, "GXorReverse", newSViv(GXorReverse));
+  newCONSTSUB(stash, "GXorInverted", newSViv(GXorInverted));
+  newCONSTSUB(stash, "GXcopyInverted", newSViv(GXcopyInverted));
+  newCONSTSUB(stash, "GXnand", newSViv(GXnand));
+  newCONSTSUB(stash, "GXset", newSViv(GXset));
+  newCONSTSUB(stash, "LineSolid", newSViv(LineSolid));
+  newCONSTSUB(stash, "LineOnOffDash", newSViv(LineOnOffDash));
+  newCONSTSUB(stash, "LineDoubleDash", newSViv(LineDoubleDash));
+  newCONSTSUB(stash, "CapNotLast", newSViv(CapNotLast));
+  newCONSTSUB(stash, "CapButt", newSViv(CapButt));
+  newCONSTSUB(stash, "CapRound", newSViv(CapRound));
+  newCONSTSUB(stash, "CapProjecting", newSViv(CapProjecting));
+  newCONSTSUB(stash, "JoinMiter", newSViv(JoinMiter));
+  newCONSTSUB(stash, "JoinRound", newSViv(JoinRound));
+  newCONSTSUB(stash, "JoinBevel", newSViv(JoinBevel));
+  newCONSTSUB(stash, "FillSolid", newSViv(FillSolid));
+  newCONSTSUB(stash, "FillTiled", newSViv(FillTiled));
+  newCONSTSUB(stash, "FillStippled", newSViv(FillStippled));
+  newCONSTSUB(stash, "FillOpaqueStippled", newSViv(FillOpaqueStippled));
+  newCONSTSUB(stash, "ArcChord", newSViv(ArcChord));
+  newCONSTSUB(stash, "ArcPieSlice", newSViv(ArcPieSlice));
+  newCONSTSUB(stash, "ClipByChildren", newSViv(ClipByChildren));
+  newCONSTSUB(stash, "IncludeInferiors", newSViv(IncludeInferiors));
+  newCONSTSUB(stash, "GCFunction", newSViv(GCFunction));
+  newCONSTSUB(stash, "GCPlaneMask", newSViv(GCPlaneMask));
+  newCONSTSUB(stash, "GCForeground", newSViv(GCForeground));
+  newCONSTSUB(stash, "GCBackground", newSViv(GCBackground));
+  newCONSTSUB(stash, "GCLineWidth", newSViv(GCLineWidth));
+  newCONSTSUB(stash, "GCLineStyle", newSViv(GCLineStyle));
+  newCONSTSUB(stash, "GCCapStyle", newSViv(GCCapStyle));
+  newCONSTSUB(stash, "GCFont", newSViv(GCFont));
+  newCONSTSUB(stash, "GCGraphicsExposures", newSViv(GCGraphicsExposures));
 # END GENERATED BOOT CONSTANTS
 #

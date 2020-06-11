@@ -151,6 +151,8 @@ $X11::Xlib::XSizeHints::VERSION= $VERSION;
 $X11::Xlib::XRectangle::VERSION= $VERSION;
 @X11::Xlib::XRenderPictFormat::ISA= ( __PACKAGE__ );
 $X11::Xlib::XRenderPictFormat::VERSION= $VERSION;
+@X11::Xlib::XGCValues::ISA= ( __PACKAGE__ );
+$X11::Xlib::XGCValues::VERSION= $VERSION;
 
 1;
 

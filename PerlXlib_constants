@@ -197,3 +197,50 @@ const_ext_shape
  i ShapeBounding
  i ShapeClip
  i ShapeInput
+const_time
+ i CurrentTime
+const_xgcvalues
+ i GXclear
+ i GXand
+ i GXandReverse
+ i GXcopy
+ i GXandInverted
+ i GXnoop
+ i GXxor
+ i GXor
+ i GXnor
+ i GXequiv
+ i GXinvert
+ i GXorReverse
+ i GXorInverted
+ i GXcopyInverted
+ i GXnand
+ i GXset
+ i LineSolid
+ i LineOnOffDash
+ i LineDoubleDash
+ i CapNotLast
+ i CapButt
+ i CapRound
+ i CapProjecting
+ i JoinMiter
+ i JoinRound
+ i JoinBevel
+ i FillSolid
+ i FillTiled
+ i FillStippled
+ i FillOpaqueStippled
+ i ArcChord
+ i ArcPieSlice
+ i ClipByChildren
+ i IncludeInferiors
+const_gc_components
+ i GCFunction
+ i GCPlaneMask
+ i GCForeground
+ i GCBackground
+ i GCLineWidth
+ i GCLineStyle
+ i GCCapStyle
+ i GCFont
+ i GCGraphicsExposures
